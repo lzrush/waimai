@@ -7,6 +7,7 @@ import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
+import lombok.Setter;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -42,4 +43,14 @@ public interface DishMapper {
 
     @AutoFill(OperationType.UPDATE)
     void update(Dish dish);
+
+    @AutoFill(OperationType.UPDATE)
+    @Update("update dish set status = #{status},update_time = #{updateTime},update_user=#{updateUser} where id = #{id}")
+    void updateStatus(Dish dish);
+
+    @Select("select * from dish where category_id = #{categoryId}")
+    List<Dish> list(Dish dish);
+
+    @Select("select * from dish d ,setmeal_dish sd  where d.id = sd.dish_id and sd.setmeal_id = #{setmealId} ")
+    List<Dish> findBySetmealId(Long setmealId);
 }
