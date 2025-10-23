@@ -75,9 +75,37 @@ public class DishServiceImpl implements DishService {
         if (setmealIds != null && setmealIds.size() > 0){
             throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
         }
-        for (Long id : ids) {
-            dishMapper.deleteById(id);
-            dishFlavorMapper.deleteByDishId(id);
+//        for (Long id : ids) {
+//            dishMapper.deleteById(id);
+//            dishFlavorMapper.deleteByDishId(id);
+//        }
+        dishMapper.deleteByIds(ids);
+
+        dishFlavorMapper.deleteByDishIds(ids);
+
+
+    }
+
+    @Override
+    public DishVO findById(Long id) {
+        DishVO dishVO = dishMapper.findById(id);
+        return dishVO;
+    }
+
+    @Override
+    @Transactional
+    public void updateById(DishDTO dishDTO) {
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO,dish);
+        dishMapper.update(dish);
+
+        dishFlavorMapper.deleteByDishId(dishDTO.getId());
+        List<DishFlavor> flavors = dishDTO.getFlavors();
+        if (flavors != null && flavors.size() > 0){
+            for (DishFlavor flavor : flavors) {
+                flavor.setDishId(dishDTO.getId());
+            }
+            dishFlavorMapper.insert(dishDTO.getFlavors());
         }
 
     }

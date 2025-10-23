@@ -3,6 +3,44 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sky.mapper.DishMapper">
+    <update id="update">
+        update dish 
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteByIds">
+        delete from dish where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <resultMap id="dishResultMap" type="com.sky.vo.DishVO">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="price" column="price"/>
+        <result property="image" column="image"/>
+        <result property="description" column="description"/>
+        <result property="status" column="status"/>
+        <result property="updateTime" column="update_time"/>
+        <!-- 口味列表 -->
+        <collection property="flavors" ofType="com.sky.entity.DishFlavor">
+            <result column="flavor" property="value"></result>
+            <result column="dfId" property="id"></result>
+            <result column="dish_id" property="dishId"></result>
+            <result column="dfName" property="name"></result>
+        </collection>
+    </resultMap>
+
 
     <select id="page" resultType="com.sky.vo.DishVO">
         select d.*,c.name as category_name
@@ -13,5 +51,10 @@
          <if test="status != null">and d.status = #{status}</if>
      </where>
         order by d.create_time desc
+    </select>
+
+
+    <select id="findById" resultMap="dishResultMap">
+        select d.*, df.dish_id,df.name as dfName,df.id as dfId, df.value as flavor from dish d left join  dish_flavor df on d.id = df.dish_id  where d.id = #{id}
     </select>
 </mapper>
