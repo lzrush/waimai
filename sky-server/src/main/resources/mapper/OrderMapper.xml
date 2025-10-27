@@ -80,7 +80,24 @@
         <where>
             <if test="begin != null">order_time &gt; #{begin}</if>
             <if test="end != null">and order_time &lt; #{end}</if>
-            <if test="status != null">and status &gt; #{status}</if>
+            <if test="status != null">and status = #{status}</if>
         </where>
+    </select>
+    <select id="sumByTime" resultType="java.lang.Integer">
+        select count(id)  from orders
+        <where>
+            <if test="beginTime != null">order_time &gt; #{beginTime}</if>
+            <if test="endTime != null">and order_time &lt; #{endTime}</if>
+            <if test="status != null">and status = #{status}</if>
+        </where>
+    </select>
+    <select id="Top10" resultType="java.util.Map">
+        select od.name as name ,sum(od.number) as num from orders o left join order_detail od on o.id = od.order_id
+        <where>
+            <if test="beginTime != null">o.order_time &gt; #{beginTime}</if>
+            <if test="endTime != null">and o.order_time &lt; #{endTime}</if>
+            <if test="status != null">and o.status = #{status}</if>
+        </where>
+    group by od.name  order by num desc limit 0,10
     </select>
 </mapper>

@@ -49,4 +49,8 @@ public interface OrderMapper {
     List<Orders> getByStatusAndOrderTime(Integer status, LocalDateTime orderTime);
 
     Double sumByMap(Map map);
+
+    Integer sumByTime(LocalDateTime beginTime, LocalDateTime endTime, Integer status);
+
+    List<Map<String, Object>> Top10(LocalDateTime beginTime, LocalDateTime endTime, Integer status);
 }
