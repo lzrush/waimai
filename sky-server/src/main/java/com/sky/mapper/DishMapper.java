@@ -11,9 +11,11 @@ import lombok.Setter;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface DishMapper {
+    Integer countByMap(Map map);
 
     /**
      * 根据分类id查询菜品数量
@@ -53,4 +55,5 @@ public interface DishMapper {
 
     @Select("select * from dish d ,setmeal_dish sd  where d.id = sd.dish_id and sd.setmeal_id = #{setmealId} ")
     List<Dish> findBySetmealId(Long setmealId);
+
 }

@@ -235,8 +235,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public PageResult adminList(OrdersPageQueryDTO ordersPageQueryDTO) {
         PageHelper.startPage(ordersPageQueryDTO.getPage(),ordersPageQueryDTO.getPageSize());
-        Page<Orders> ordersList =  orderMapper.list(ordersPageQueryDTO);
+        Page<Orders> page =  orderMapper.list(ordersPageQueryDTO);
         List<OrderVO> orderVOS = new ArrayList<>();
+        List<Orders> ordersList = page.getResult();
         if (ordersList != null && ordersList.size() > 0){
             for (Orders orders : ordersList) {
                 OrderVO orderVO = new OrderVO();
@@ -250,7 +251,7 @@ public class OrderServiceImpl implements OrderService {
                 orderVOS.add(orderVO);
             }
         }
-        return new PageResult(ordersList.getTotal(),orderVOS);
+        return new PageResult(page.getTotal(),orderVOS);
     }
 
     @Override
@@ -279,7 +280,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderStatisticsVO statistic() {
-        return orderMapper.listGroupBy(BaseContext.getCurrentId());
+        return orderMapper.listGroupBy();
     }
 
     @Override

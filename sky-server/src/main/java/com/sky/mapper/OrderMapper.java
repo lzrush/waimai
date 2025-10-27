@@ -43,7 +43,7 @@ public interface OrderMapper {
     @Update("update orders set status = 6 where id = #{id}")
     void updateById(Long id);
 
-    OrderStatisticsVO listGroupBy(Long id);
+    OrderStatisticsVO listGroupBy();
 
     @Select("select  * from orders where status = #{status} and order_time < #{orderTime}")
     List<Orders> getByStatusAndOrderTime(Integer status, LocalDateTime orderTime);
@@ -53,4 +53,7 @@ public interface OrderMapper {
     Integer sumByTime(LocalDateTime beginTime, LocalDateTime endTime, Integer status);
 
     List<Map<String, Object>> Top10(LocalDateTime beginTime, LocalDateTime endTime, Integer status);
+
+
+    Integer countByMap(Map map);
 }

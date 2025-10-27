@@ -57,4 +57,15 @@
     <select id="findById" resultMap="dishResultMap">
         select d.*, df.dish_id,df.name as dfName,df.id as dfId, df.value as flavor from dish d left join  dish_flavor df on d.id = df.dish_id  where d.id = #{id}
     </select>
+    <select id="countByMap" resultType="java.lang.Integer">
+        select count(id) from dish
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+        </where>
+    </select>
 </mapper>
